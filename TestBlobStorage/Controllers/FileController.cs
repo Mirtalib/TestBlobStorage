@@ -60,7 +60,7 @@ namespace TestBlobStorage.Controllers
         }
 
 
-        [HttpPost("uploadFileAsync")]
+        [HttpPost("uploadFile")]
         public IActionResult UploadFile(IFormFile formFile)
         {
             try
