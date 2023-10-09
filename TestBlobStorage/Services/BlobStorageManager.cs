@@ -63,9 +63,15 @@ namespace TestBlobStorage.Services
             return signedUrl;
         }
 
-        public Task<string> GetSignedUrlAsync(string fileName)
+        public async Task<string> GetSignedUrlAsync(string fileName)
         {
-            throw new NotImplementedException();
+            var serviceClient = new BlobServiceClient(_storageOptions.ConnectionString);
+            var contaionerClient = serviceClient.GetBlobContainerClient(_storageOptions.ContainerName);
+            var blobClient = contaionerClient.GetBlobClient(fileName);
+
+            var signedUrl = blobClient.GenerateSasUri(BlobSasPermissions.Read, DateTime.Now.AddHours(2)).AbsoluteUri;
+
+            return await Task.FromResult(signedUrl);
         }
 
         public bool UploadFile(IFormFile formFile)
@@ -75,10 +81,8 @@ namespace TestBlobStorage.Services
             {
                 BlobClient client = container.GetBlobClient(formFile.FileName);
 
-                // Open a stream for the file we want to upload
                 using (Stream? data = formFile.OpenReadStream())
                 {
-                    // Upload the file async
                     client.Upload(data);
                 }
 

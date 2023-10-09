@@ -30,6 +30,20 @@ namespace TestBlobStorage.Controllers
             }
         }
 
+        [HttpGet("getUrlAsync")]
+        public IActionResult GetUrlAsync(string fileName)
+        {
+            try
+            {
+                var result = _storageManager.GetSignedUrlAsync(fileName);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode((int)HttpStatusCode.NotFound);
+            }
+        }
+
         [HttpDelete("deleteFile")]
         public IActionResult Delete(string fileName)
         {
